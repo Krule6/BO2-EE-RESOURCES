@@ -19,5 +19,4 @@
       if (reduce) { window.location.href = link.href; return; }
 
       document.body.classList.add('leaving');
-      setTimeout(() => { window.location.href = link.href; }, 280); // matchar --fade-ms
     });
