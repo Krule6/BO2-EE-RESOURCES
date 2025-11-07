@@ -6,16 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const preview = document.getElementById('preview');
 
     const nodes = [
-        { id: 'a', x: 16.3, y: 30.5, label: 'Nacht/Pylon', image: 'assets/nacht.png' },
-        { id: 'b', x: 78, y: 53.2, label: 'Depot', image: 'assets/depot.png' },
-        { id: 'c', x: 21.5, y: 60, label: 'Power', image: 'assets/power.png' },
-        { id: 'd', x: 34, y: 55, label: 'Cabin', image: 'assets/cabin.png' },
-        { id: 'e', x: 76, y: 36.5, label: 'Bridge', image: 'assets/bridge.png' },
-        { id: 'f', x: 56.5, y: 34.6, label: 'Town', image: 'assets/town.png' },
-        { id: 'g', x: 54.5, y: 16, label: 'Midway', image: 'assets/midway.png' },
-        { id: 'h', x: 60.4, y: 10, label: 'Diner', image: 'assets/diner.png' },
+        { id: 'a', x: 16.3, y: 30.5, label: 'Nacht/Pylon', image: './assets/nacht.png' },
+        { id: 'b', x: 78, y: 53.2, label: 'Depot', image: './assets/depot.png' },
+        { id: 'c', x: 21.5, y: 60, label: 'Power', image: './assets/power.png' },
+        { id: 'd', x: 34, y: 55, label: 'Cabin', image: './assets/cabin.png' },
+        { id: 'e', x: 76, y: 36.5, label: 'Bridge', image: './assets/bridge.png' },
+        { id: 'f', x: 56.5, y: 34.6, label: 'Town', image: './assets/town.png' },
+        { id: 'g', x: 54.5, y: 16, label: 'Midway', image: './assets/midway.png' },
+        { id: 'h', x: 60.4, y: 10, label: 'Diner', image: './assets/diner.png' },
         { id: 'i', x: 53.35, y: 81.5, label: 'bleh' },
-
     ];
 
     function placeNodes() {
