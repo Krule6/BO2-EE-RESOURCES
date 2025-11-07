@@ -16,7 +16,7 @@ A collection of interactive solvers & resources for Call of Duty: Black Ops II -
 
 <img src="assets/map.png" alt="dierise" width="600">
 
-### Die Rise
+### Die Rise - Mahjong Tile Solver
 
 - A simple and interactive Mahjong Tile Solver.
 
