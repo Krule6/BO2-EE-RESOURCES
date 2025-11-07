@@ -4,7 +4,7 @@
 body {
   margin: 0;
   overflow: auto;
-  background: url("./assets/background.jpg") center/cover no-repeat;
+  background: url("./assets/blackbg.jpg") center/cover no-repeat;
   color: var(--ink);
   font-family: var(--font-base);
   line-height: 1.4;
