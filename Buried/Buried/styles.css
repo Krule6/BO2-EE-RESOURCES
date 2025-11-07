@@ -46,7 +46,6 @@ body::after {
   background: radial-gradient(1200px 800px at 60% 40%, rgba(0, 0, 0, .18), rgba(0, 0, 0, .65));
 }
 
-/*section layout*/
 .page {
   display: grid;
   gap: 16px;
@@ -76,7 +75,6 @@ body::after {
   align-items: center;
 }
 
-/*maze*/
 .maze-grid {
   display: grid;
   gap: 12px;
@@ -95,7 +93,6 @@ body::after {
 
 }
 
-/*switch order*/
 .switch-card {
   display: grid;
   row-gap: 10px;
@@ -103,7 +100,6 @@ body::after {
   align-items: center;
 }
 
-/*switch order header */
 .switch-card>h1 {
   margin: 0;
   font-weight: 800;
@@ -289,7 +285,6 @@ body::after {
   align-items: center
 }
 
-/* possible combinations */
 .possibles-card .pc-header {
   display: flex;
   align-items: center;
@@ -305,7 +300,6 @@ body::after {
   text-align: center;
 }
 
-/* removed: .prob h1 (unused) */
 
 .possibles-card .pc-header>* {
   flex: 0 0 auto;
@@ -326,17 +320,13 @@ body::after {
 #comboGrid {
   display: grid;
   grid-template-columns: 1fr;
-  /* 1 row per combo */
   row-gap: 4px;
-  /* tighter gap */
   transform-origin: top left;
 }
 
 .combo-pill {
   padding: 3px 6px;
-  /* bit tighter */
   font-size: 30px;
-  /* can decrease to 11px if needed */
   line-height: 1.2;
   border-radius: 10px;
   background: #15171d;
@@ -385,7 +375,6 @@ body::after {
   }
 }
 
-/* broader maze and tighter switch/possible */
 :root {
   --switch-w: 235px;
   --combos-w: 235px;
@@ -393,12 +382,10 @@ body::after {
   --panel-vpad: 18px;
 }
 
-/* 1st column more breadth */
 .page {
   grid-template-columns: minmax(900px, 2.4fr) var(--switch-w) var(--combos-w);
 }
 
-/* maze: keep 3×2 without scroll*/
 .maze-section {
   align-self: stretch;
   display: flex;
@@ -466,7 +453,6 @@ body::after {
   line-height: 1.2;
 }
 
-/* safeguards for low height or tighter breadth */
 @media (max-height: 760px) {
   .maze-grid {
     gap: 10px;
@@ -526,33 +512,25 @@ h1,
   text-decoration: underline;
 }
 
-/* --- CIPHERS: samma stil som maze-bilderna, men större och lite bredare --- */
-
-/* Låt cipher-blocket ligga i maze-grid och spänna över hela bredden */
 .cipher-block {
-  grid-column: 1 / -1;          /* full bredd över alla kolumner */
-  margin-top: 12px;             /* samma rytm som mellan maze-korten */
+  grid-column: 1 / -1;     
+  margin-top: 12px;      
 }
 
-/* Bilden är större än en enskild ruta, med samma look som maze-grid img */
+
 .cipher-block img {
   display: block;
-  width: 100%;                  /* fyll hela raden (bredare än varje maze-kort) */
-  height: auto;                 /* behåll proportioner */
+  width: 100%;      
+  height: auto;    
   object-fit: contain;
 
-  /* matcha maze-grid img */
   border-radius: 14px;
   border: 1px solid rgba(246, 200, 108, .6);
   background: #0f1013;
-
-  /* gör den LITE större visuellt på höjden jämfört med en standardrad */
-  /* Justera vid behov om den blir för stor/liten på din skärm */
   max-height: min(72vh, 1200px);
-  padding: 0;                   /* ingen extra padding runt bilden */
+  padding: 0;
 }
 
-/* På riktigt smala skärmar: ge den luft och undvik att den dominerar helt */
 @media (max-width: 1200px) {
   .cipher-block img {
     max-height: min(60vh, 900px);
