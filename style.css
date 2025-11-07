@@ -178,13 +178,13 @@
     border-radius: 10px;
   }
 
-  footer {
-    text-align: center;
-    margin-top: clamp(10px, 2vw, 16px);
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 12px;
-  }
+footer {
+  text-align: center;
+  margin-top: clamp(18px, 3vw, 28px);
+  color: #ffffff;
+  font-family: var(--sans);
+  font-size: 12px;
+}
 
   /* Respektera reduced motion */
   @media (prefers-reduced-motion: reduce) {
