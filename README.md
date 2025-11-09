@@ -10,7 +10,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 ### Tranzit - Map & Portal Destinations
 
-- A visual map of tranzit with all locations for the mystery box, teleports, locations, perk machines etc.
+- A visual map of tranzit with all locations for the mystery box, teleports, site locations, perk machines etc.
   
 - Features a hover function that shows the in game teleport locations to help players navigate through the map
 
