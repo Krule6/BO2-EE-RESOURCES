@@ -292,13 +292,6 @@ input {
     color: #ffffff;
 }
 
-.footer {
-    text-align: center;
-    margin-top: 100px;
-    margin-bottom: 20px;
-    font-size: 12px;
-}
-
 
 /* Responsiv design */
 @media (max-width: 1200px) {
@@ -314,12 +307,57 @@ input {
 }
 
 
+#text-box,
 .text-box {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    min-height: 80px;
-    padding: 12px;
-    width: 260px;
+    min-width: 610px;
+    border-radius: 8px;
+    margin: 12px 0 0 0;
     box-sizing: border-box;
+    display: block;
+    border: 1px solid var(--gr);
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.left-column .text-box {
+    width: 100%;
+    max-width: 420px;
+}
+
+/* Färgvariabler — justera efter behov */
+:root {
+    --p-color: rgb(145, 128, 71)
+    /* mörk blå för h1/h2 */
+    --h2-color: #ffcc00;
+    /* petrol för h2 */
+    --h3-color: #ffcc00;
+    /* varm orange för h3 */
+    --h4-color: #ffcc00;
+    /* lila för h4 */
+    --n-color: #DC2626;
+    /* röd för <n> eller .n */
+}
+
+/* Headers */
+h1 {
+    color: var(--h1-color);
+}
+
+h2 {
+    color: var(--h2-color);
+}
+
+h3 {
+    color: var(--h3-color);
+}
+
+h4 {
+    color: var(--h4-color);
+}
+
+p {
+    font-weight: bold;
+    font-style: italic;
+    font-weight: 300;
+    text-align: start;
+    color: #fff5ac;
 }
