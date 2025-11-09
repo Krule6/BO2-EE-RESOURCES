@@ -1,16 +1,16 @@
 # BO2 EE Resources & Solvers
 
-A collection of interactive solvers & resources for Call of Duty: Black Ops II - Zombies Easter Eggs.
+A collection of interactive solvers & resources for Call of Duty: Black Ops II - Zombies Easter Eggs
 
 ## Website link
 
 https://krule6.github.io/BO2-EE-Resources/
 
-## Resources & Solvers
+# Resources & Solvers
 
 ### Tranzit - Map & Portal Destinations
 
-- A visual map of tranzit with all locations for the mystery box, teleports, site locations, perk machines etc.
+- A visual map of tranzit with all locations for the mystery box, teleports, site locations, perk machines etc
   
 - Features a hover function that shows the in game teleport locations to help players navigate through the map
 
@@ -18,7 +18,7 @@ https://krule6.github.io/BO2-EE-Resources/
 
 ### Die Rise - Mahjong Tile Solver
 
-- A simple and interactive Mahjong Tile Solver.
+- A simple and interactive Mahjong Tile Solver
 
 - Interactive tracker to record the mahjong tiles corresponding direction/number and see possible combinations
 
@@ -30,6 +30,7 @@ https://krule6.github.io/BO2-EE-Resources/
 - Good/Bad maze layouts
 
 - Interactive tracker to record you switch hits and see possible combinations
+
 <img src="assets/switch.png" alt="dierise" width="600">
 
 - Quick reference ciphers image
