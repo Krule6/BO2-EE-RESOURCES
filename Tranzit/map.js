@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const img = document.getElementById('map-img');
     const wrapper = document.querySelector('.map-wrapper');
@@ -85,4 +84,3 @@ document.addEventListener('DOMContentLoaded', () => {
         hidePreview();
     });
 });
-
