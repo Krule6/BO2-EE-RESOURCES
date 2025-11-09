@@ -255,9 +255,19 @@ input {
 .combo-grid {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 15px;
     max-height: 400px;
     overflow-y: auto;
+}
+
+.combo-group {
+    background-color: rgba(255, 204, 0, 0.08);
+    border: 2px solid rgba(255, 204, 0, 0.3);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .combo-pill {

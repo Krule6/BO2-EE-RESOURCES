@@ -143,49 +143,66 @@ function updatePossibleCombinations() {
         return key.split('').map(ch => letterToDir[ch]);
     }
 
-    // base north order groups (6 bases starting with N), each group = base + its two left-rotations
-    const northOrder = ["NWSE","NWES","NSWE","NSEW","NEWS","NESW"];
-    const priorityLetters = ['N','W','E','S'];
-
-    // shift a key's letters by k in cycle N->W->E->S
-    const cycle = ['N','W','E','S'];
-    function shiftKey(key, k) {
-        const map = {};
-        for (let i = 0; i < 4; i++) map[cycle[i]] = cycle[(i + k) % 4];
-        return key.split('').map(ch => map[ch]).join('');
+    // Group permutations by canonical rotation so all rotational equivalents (0..3 shifts)
+    // are considered the same group. This ensures patterns like WSEN and ENWS end up
+    // in the same grouping regardless of which rotation appears first.
+    function permToKeyLetters(perm) {
+        return perm.map(d => DIR_LABEL[d]).join('');
     }
 
-    // build desired lists for N, W, E, S (northorder shifted)
-    const desiredMap = {};
-    for (let i = 0; i < priorityLetters.length; i++) {
-        desiredMap[priorityLetters[i]] = northOrder.map(k => shiftKey(k, i));
+    function rotateKeyLetters(key, k) {
+        return key.slice(k) + key.slice(0, k);
     }
 
-    // Determine required starting direction (if pos1 is fixed e.g. red=1 => fixedPos[1] = 'west')
-    const requiredStart = fixedPos[1] ? DIR_LABEL[fixedPos[1]] : null; // 'N'|'W'|'E'|'S' or null
+    // compute canonical (lexicographically smallest) rotation of a 4-letter key
+    // Consider ALL 4 rotations to find the canonical key that represents the circular pattern
+    function canonicalRotation(key) {
+        let best = key;
+        for (let i = 1; i < 4; i++) {
+            const r = rotateKeyLetters(key, i);
+            if (r < best) best = r;
+        }
+        return best;
+    }
 
-    let groups = [];
-    for (let pi = 0; pi < priorityLetters.length; pi++) {
-        const startLetter = priorityLetters[pi];
-        const list = desiredMap[startLetter];
-        for (const baseKey of list) {
-            const basePerm = keyToPerm(baseKey);
-            const r1 = rotateLeft(basePerm, 1);
-            const r2 = rotateLeft(basePerm, 2);
-            const candidates = [basePerm, r1, r2];
-            const groupItems = [];
-            for (const cand of candidates) {
-                const s = serial(cand);
-                if (!validSet.has(s)) continue;
-                let ok = true;
+    // Build map canonicalKey -> list of perms (arrays) that are valid and respect fixedPos
+    // With 24 total permutations and groups of 3, we need 8 groups to show all combinations.
+    // Each group represents 3 consecutive rotations you can try in one round.
+    // Starting from different rotations of the same circular pattern creates different groups.
+    const groups = [];
+    const processedAsGroup = new Set(); // Track which 3-rotation sequences we've shown
+    
+    for (const perm of validPerms) {
+        // Generate the 3-rotation group starting from this perm
+        const groupPerms = [];
+        let groupRespectsFix = false;
+        
+        for (let shift = 0; shift < 3; shift++) {
+            const rotatedPerm = rotateLeft(perm, shift);
+            const rotatedSerial = serial(rotatedPerm);
+            
+            if (validSet.has(rotatedSerial)) {
+                groupPerms.push(rotatedPerm);
+                
+                // Check if this rotation respects fixedPos
+                let rotOk = true;
                 for (const posStr in fixedPos) {
                     const pos = parseInt(posStr, 10);
-                    if (cand[pos - 1] !== fixedPos[pos]) { ok = false; break; }
+                    if (rotatedPerm[pos - 1] !== fixedPos[pos]) { rotOk = false; break; }
                 }
-                if (!ok) continue;
-                groupItems.push(cand);
+                if (rotOk) groupRespectsFix = true;
             }
-            if (groupItems.length > 0) groups.push(groupItems);
+        }
+        
+        // Create a unique key for this group (sorted to avoid duplicates of same 3 perms)
+        const groupKey = groupPerms.map(p => serial(p)).sort().join('||');
+        
+        // Only add if we haven't seen this exact group before and it respects fixedPos
+        if (groupPerms.length > 0 && 
+            !processedAsGroup.has(groupKey) &&
+            (Object.keys(fixedPos).length === 0 || groupRespectsFix)) {
+            groups.push(groupPerms);
+            processedAsGroup.add(groupKey);
         }
     }
 
@@ -199,15 +216,6 @@ function updatePossibleCombinations() {
             return true;
         });
         fallback.forEach(p => groups.push([p]));
-    }
-
-    // If a starting position is known (e.g. fixedPos[1] => start letter known), only keep groups that contain that start
-    if (requiredStart) {
-        const filtered = groups.filter(group =>
-            group.some(item => permKey(item).startsWith(requiredStart))
-        );
-        if (filtered.length > 0) groups = filtered;
-        // otherwise keep groups as-is (no match)
     }
 
     // If user provided any direction-color or any color-number input, dedupe duplicates across groups
@@ -224,39 +232,68 @@ function updatePossibleCombinations() {
     const perTryPct = (100 / n);
     const combinedPct = Math.min(100, (availableDistinct / n) * 100);
     if (availableDistinct === PYLON_ATTEMPTS) {
-        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — You can try up to ${availableDistinct} distinct combos in one round: ${combinedPct.toFixed(2)}%`;
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: ${combinedPct.toFixed(2)}%`;
     } else {
-        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} tries per round: ${combinedPct.toFixed(2)}%`;
+        probDisplay.textContent = `1/${n} (${perTryPct.toFixed(2)}%) — ${availableDistinct} codes per round: ${combinedPct.toFixed(2)}%`;
     }
 
-    // render groups in order; if dedupeAcrossGroups, skip duplicates across groups
-    groups.forEach((group, gi) => {
+    // Sort groups by size (largest first) so groups with more combinations appear at the top
+    // This helps prioritize groups with higher success probability
+    groups.sort((a, b) => b.length - a.length);
+
+    // First pass: collect all items to show per group (accounting for deduplication)
+    const groupsToRender = [];
+    groups.forEach((group) => {
+        const itemsToShow = [];
+        
         group.forEach(perm => {
             const s = serial(perm);
             if (dedupeAcrossGroups && emitted.has(s)) return; // skip duplicate when fixed info exists
+            
+            itemsToShow.push(perm);
+            if (dedupeAcrossGroups) emitted.add(s);
+        });
+        
+        if (itemsToShow.length > 0) {
+            groupsToRender.push(itemsToShow);
+        }
+    });
+    
+    // Sort the collected groups by their actual size (after deduplication)
+    groupsToRender.sort((a, b) => b.length - a.length);
+
+    // render groups in order
+    // Show groups with 2+ members in a groupContainer, single items without grouping
+    groupsToRender.forEach((itemsToShow) => {
+        const groupContainer = document.createElement('div');
+        groupContainer.className = 'combo-group';
+        
+        // If group has 2+ items, show them in a groupContainer
+        // If group has only 1 item, show it directly without grouping box
+        if (itemsToShow.length >= 2) {
+            itemsToShow.forEach(perm => {
+                const block = document.createElement('div');
+                block.className = 'combo-pill';
+                const seqSpan = document.createElement('div');
+                seqSpan.className = 'combo-seq';
+                seqSpan.textContent = formatPerm(perm);
+                block.appendChild(seqSpan);
+                groupContainer.appendChild(block);
+            });
+            grid.appendChild(groupContainer);
+        } else if (itemsToShow.length === 1) {
+            // Show single item directly without group box
             const block = document.createElement('div');
             block.className = 'combo-pill';
             const seqSpan = document.createElement('div');
             seqSpan.className = 'combo-seq';
-            seqSpan.textContent = formatPerm(perm);
+            seqSpan.textContent = formatPerm(itemsToShow[0]);
             block.appendChild(seqSpan);
             grid.appendChild(block);
-            if (dedupeAcrossGroups) emitted.add(s);
-        });
-        if (gi < groups.length - 1) {
-            const sep = document.createElement('div');
-            sep.className = 'combo-sep';
-            sep.style.height = '8px';
-            grid.appendChild(sep);
         }
     });
 
-    if (availableDistinct < PYLON_ATTEMPTS) {
-        const note = document.createElement('div');
-        note.className = 'combo-note';
-        note.textContent = `Note: rotation-based tries are limited to ${availableDistinct} with current inputs.`;
-        grid.appendChild(note);
-    }
+
 }
 
 function updateColorButtons() {
